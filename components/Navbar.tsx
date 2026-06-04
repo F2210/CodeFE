@@ -1,9 +1,11 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import { useCart } from "@/context/CartContext";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { totalItems } = useCart();
 
   const ticker = [
     "OUTDOOR", "COCINA", "REGALOS CORPORATIVOS", "VIAJES", "BBQ",
@@ -30,23 +32,49 @@ export default function Navbar() {
             <Link href="/muki-b2b" className="hover:text-[#E8531A] transition-colors">Muki B2B</Link>
           </div>
 
-          {/* CTA */}
-          <Link
-            href="/#categorias"
-            className="hidden md:block bg-gray-900 text-white text-sm font-semibold px-5 py-2 rounded-full hover:bg-gray-700 transition-colors"
-          >
-            Catálogo
-          </Link>
+          {/* Cart + CTA */}
+          <div className="hidden md:flex items-center gap-3">
+            <Link href="/carrito" className="relative p-2 text-gray-700 hover:text-[#E8531A] transition-colors">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              {totalItems > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-[#E8531A] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  {totalItems > 99 ? "99+" : totalItems}
+                </span>
+              )}
+            </Link>
+            <Link
+              href="/#categorias"
+              className="bg-gray-900 text-white text-sm font-semibold px-5 py-2 rounded-full hover:bg-gray-700 transition-colors"
+            >
+              Catálogo
+            </Link>
+          </div>
 
-          {/* Hamburger mobile */}
-          <button className="md:hidden text-gray-700" onClick={() => setOpen(!open)}>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {open
-                ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              }
-            </svg>
-          </button>
+          {/* Mobile: cart + hamburger */}
+          <div className="md:hidden flex items-center gap-2">
+            <Link href="/carrito" className="relative p-2 text-gray-700">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              {totalItems > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-[#E8531A] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  {totalItems > 99 ? "99+" : totalItems}
+                </span>
+              )}
+            </Link>
+            <button className="text-gray-700" onClick={() => setOpen(!open)}>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {open
+                  ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                }
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Ticker naranja */}

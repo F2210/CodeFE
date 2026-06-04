@@ -1,8 +1,12 @@
+"use client";
+import { useState } from "react";
+import { useCart } from "@/context/CartContext";
+
 const products = [
-  { name: "Mochila Travel Pro",  category: "OUTDOOR",  tag: "Nuevo",   icon: "🎒", bg: "bg-[#F0EDE6]" },
-  { name: "Auriculares Premium", category: "TECH",     tag: "Popular", icon: "🎧", bg: "bg-[#EEEEEE]" },
-  { name: "Termo Minimalista",   category: "COCINA",   tag: null,      icon: "🏺", bg: "bg-[#F5F5F5]" },
-  { name: "Kit Ejecutivo Muki",  category: "REGALOS",  tag: "Corp.",   icon: "📓", bg: "bg-[#EEEEEE]" },
+  { id: "mochila-travel-pro",   name: "Mochila Travel Pro",  category: "OUTDOOR",  tag: "Nuevo",   icon: "🎒", bg: "bg-[#F0EDE6]", price: 89990  },
+  { id: "auriculares-premium",  name: "Auriculares Premium", category: "TECH",     tag: "Popular", icon: "🎧", bg: "bg-[#EEEEEE]", price: 149990 },
+  { id: "termo-minimalista",    name: "Termo Minimalista",   category: "COCINA",   tag: null,      icon: "🏺", bg: "bg-[#F5F5F5]", price: 39990  },
+  { id: "kit-ejecutivo-muki",   name: "Kit Ejecutivo Muki",  category: "REGALOS",  tag: "Corp.",   icon: "📓", bg: "bg-[#EEEEEE]", price: 119990 },
 ];
 
 const tagColors: Record<string, string> = {
@@ -11,7 +15,20 @@ const tagColors: Record<string, string> = {
   "Corp.":   "bg-gray-900 text-white",
 };
 
+function formatPrice(n: number) {
+  return "$" + n.toLocaleString("es-CL");
+}
+
 export default function FeaturedProducts() {
+  const { addItem } = useCart();
+  const [added, setAdded] = useState<Record<string, boolean>>({});
+
+  function handleAdd(p: typeof products[number]) {
+    addItem({ id: p.id, name: p.name, category: p.category, icon: p.icon, price: p.price });
+    setAdded((prev) => ({ ...prev, [p.id]: true }));
+    setTimeout(() => setAdded((prev) => ({ ...prev, [p.id]: false })), 1500);
+  }
+
   return (
     <section id="productos" className="py-4 pb-20 max-w-6xl mx-auto px-5">
       <div className="border-t border-gray-200 pt-10 mb-2">
@@ -35,9 +52,17 @@ export default function FeaturedProducts() {
             {/* Info */}
             <div className="bg-white px-4 py-4">
               <p className="text-xs font-bold tracking-widest text-[#E8531A] mb-1">{p.category}</p>
-              <h3 className="font-semibold text-gray-900 text-sm mb-3">{p.name}</h3>
-              <button className="text-xs text-gray-500 hover:text-gray-900 transition-colors">
-                Ver detalle →
+              <h3 className="font-semibold text-gray-900 text-sm mb-1">{p.name}</h3>
+              <p className="text-sm font-bold text-gray-900 mb-3">{formatPrice(p.price)}</p>
+              <button
+                onClick={() => handleAdd(p)}
+                className={`w-full text-xs font-semibold py-2 rounded-lg transition-all ${
+                  added[p.id]
+                    ? "bg-green-100 text-green-700"
+                    : "bg-[#E8531A] text-white hover:bg-[#d14518]"
+                }`}
+              >
+                {added[p.id] ? "✓ Agregado" : "Agregar"}
               </button>
             </div>
           </div>
