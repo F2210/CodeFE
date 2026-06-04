@@ -1,16 +1,29 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafaf8;
+  --background: #F5F3EE;
   --foreground: #1a1a18;
+  --orange: #E8531A;
+  --orange-hover: #cf4715;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muki: #E8531A;
+  --color-muki-hover: #cf4715;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee 20s linear infinite;
 }
